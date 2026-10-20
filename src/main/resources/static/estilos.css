@@ -1,0 +1,199 @@
+/* ===== Colores del tema Día ===== */
+:root {
+    color-scheme: light;
+    --fondo: #f4f5f7;
+    --superficie: #ffffff;
+    --borde: #dfe3e8;
+    --texto: #1f2933;
+    --texto-suave: #5b6675;
+    --acento: #1d4ed8;
+    --peligro: #b91c1c;
+    --exito: #166534;
+}
+
+/* ===== Colores del tema Noche ===== */
+:root[data-tema="noche"] {
+    color-scheme: dark;
+    --fondo: #0f141a;
+    --superficie: #171d25;
+    --borde: #2c3540;
+    --texto: #e6e9ee;
+    --texto-suave: #a5afbc;
+    --acento: #8ab4ff;
+    --peligro: #ff9494;
+    --exito: #7ee2a8;
+}
+
+* { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+body {
+    margin: 0;
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 15px;
+}
+
+h1, h2, h3 { margin: 0; }
+
+/* ===== Cabecera ===== */
+.cabecera {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 32px;
+    background: var(--superficie);
+    border-bottom: 1px solid var(--borde);
+}
+.cabecera h1 { font-size: 1.5rem; }
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 32px;
+}
+
+.barra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.barra h2 { font-size: 1.2rem; }
+.contador { color: var(--texto-suave); font-weight: normal; }
+
+/* ===== Botones Día/Noche y Tabla/Cuadrícula ===== */
+.selector {
+    display: inline-flex;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.selector button {
+    padding: 8px 16px;
+    border: none;
+    background: var(--superficie);
+    color: var(--texto-suave);
+    font: inherit;
+    cursor: pointer;
+}
+.selector button[aria-pressed="true"] {
+    background: var(--acento);
+    color: var(--superficie);
+    font-weight: 600;
+}
+
+/* ===== Botones ===== */
+.btn {
+    padding: 6px 12px;
+    border: 1px solid var(--borde);
+    border-radius: 6px;
+    background: var(--superficie);
+    color: var(--texto);
+    font: inherit;
+    cursor: pointer;
+}
+.btn--primario { background: var(--acento); border-color: var(--acento); color: var(--superficie); font-weight: 600; }
+.btn--editar { color: var(--acento); }
+.btn--eliminar { color: var(--peligro); }
+.btn:hover { border-color: currentColor; }
+
+.botones { display: flex; gap: 8px; }
+
+/* ===== Mensajes ===== */
+.mensaje {
+    margin: 0 0 16px;
+    padding: 10px 14px;
+    border: 1px solid var(--exito);
+    border-radius: 6px;
+    color: var(--exito);
+}
+.mensaje--error { border-color: var(--peligro); color: var(--peligro); }
+
+.estado {
+    padding: 40px;
+    text-align: center;
+    color: var(--texto-suave);
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+}
+.estado--error { color: var(--peligro); }
+
+/* ===== Vista Tabla ===== */
+.tabla-envoltorio {
+    overflow-x: auto;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+}
+.tabla { width: 100%; border-collapse: collapse; }
+.tabla th,
+.tabla td {
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--borde);
+}
+.tabla th { color: var(--texto-suave); font-size: .85rem; }
+.tabla tbody tr:last-child td { border-bottom: none; }
+
+/* ===== Vista Cuadrícula ===== */
+.cuadricula {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+}
+.tarjeta {
+    padding: 16px;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    overflow-wrap: anywhere;
+}
+.tarjeta h3 { font-size: 1rem; margin-bottom: 8px; }
+.tarjeta p { margin: 4px 0; }
+.tarjeta strong { color: var(--texto-suave); font-weight: 600; }
+.tarjeta .botones { margin-top: 12px; }
+
+/* ===== Formulario de edición ===== */
+dialog {
+    width: min(480px, calc(100% - 32px));
+    padding: 24px;
+    background: var(--superficie);
+    color: var(--texto);
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+}
+dialog::backdrop { background: rgba(0, 0, 0, .5); }
+dialog h2 { font-size: 1.15rem; margin-bottom: 16px; }
+
+dialog label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    font-size: .9rem;
+}
+dialog input {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    padding: 8px 10px;
+    background: var(--superficie);
+    color: var(--texto);
+    border: 1px solid var(--borde);
+    border-radius: 6px;
+    font: inherit;
+    font-weight: normal;
+}
+dialog .botones { justify-content: flex-end; margin-top: 8px; }
+
+/* ===== Móvil ===== */
+@media (max-width: 700px) {
+    .cabecera, .barra { flex-direction: column; align-items: flex-start; }
+    .cabecera { padding: 16px; }
+    main { padding: 16px; }
+}

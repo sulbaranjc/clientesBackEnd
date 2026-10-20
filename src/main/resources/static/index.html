@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gestión de Clientes</title>
+    <!-- Aplica el tema guardado antes de mostrar la página -->
+    <script>document.documentElement.dataset.tema = localStorage.getItem('tema') || 'dia';</script>
+    <link rel="stylesheet" href="estilos.css">
+    <script src="app.js" defer></script>
+</head>
+<body>
+
+<header class="cabecera">
+    <h1>Gestión de Clientes</h1>
+    <div class="selector">
+        <button type="button" data-tema="dia">Día</button>
+        <button type="button" data-tema="noche">Noche</button>
+    </div>
+</header>
+
+<main>
+    <div class="barra">
+        <h2>Clientes <span id="contador" class="contador"></span></h2>
+        <div class="selector">
+            <button type="button" data-vista="tabla">Tabla</button>
+            <button type="button" data-vista="cuadricula">Cuadrícula</button>
+        </div>
+    </div>
+
+    <p id="mensaje" class="mensaje" hidden></p>
+    <p id="estado" class="estado">Cargando clientes…</p>
+
+    <!-- Vista Tabla -->
+    <div id="vista-tabla" class="tabla-envoltorio" hidden>
+        <table class="tabla">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="cuerpo-tabla"></tbody>
+        </table>
+    </div>
+
+    <!-- Vista Cuadrícula -->
+    <div id="vista-cuadricula" class="cuadricula" hidden></div>
+</main>
+
+<!-- Formulario para editar un cliente -->
+<dialog id="modal-editar">
+    <form id="form-editar">
+        <h2 id="titulo-editar">Editar cliente</h2>
+        <p id="error-formulario" class="mensaje mensaje--error" hidden></p>
+
+        <label>Nombre *
+            <input id="nombre" maxlength="100" required>
+        </label>
+        <label>Apellido *
+            <input id="apellido" maxlength="100" required>
+        </label>
+        <label>Email
+            <input id="email" type="email" maxlength="150">
+        </label>
+        <label>Teléfono
+            <input id="telefono" maxlength="20">
+        </label>
+        <label>Dirección
+            <input id="direccion" maxlength="255">
+        </label>
+
+        <div class="botones">
+            <button type="button" id="btn-cancelar" class="btn">Cancelar</button>
+            <button type="submit" class="btn btn--primario">Guardar</button>
+        </div>
+    </form>
+</dialog>
+
+</body>
+</html>
