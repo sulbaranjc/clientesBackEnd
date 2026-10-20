@@ -20,26 +20,124 @@ db.password=${DB_PASSWORD}
 
 La contraseña de MySQL **no se guarda en el código**: se lee de la variable de entorno `DB_PASSWORD`.
 
+## Variables de entorno
+
+### ¿Qué es una variable de entorno?
+
+Es un valor con nombre (por ejemplo `DB_PASSWORD=1234`) que guarda el **sistema operativo**
+y que cualquier programa puede leer al arrancar. Sirve para dar configuración a una aplicación
+**sin escribirla dentro del código**.
+
+### ¿Por qué usarlas para la contraseña?
+
+- **Seguridad:** este repositorio es público. Si la contraseña estuviera en
+  `application.properties`, cualquiera podría verla en GitHub (y seguiría en el historial
+  de git aunque luego se borrara).
+- **Cada uno usa la suya:** cada alumno tiene su propio MySQL con su propia contraseña.
+  Con una variable de entorno, todos usan el mismo código sin modificar ningún archivo.
+- **Distintos entornos:** en desarrollo, pruebas o producción se cambia la variable,
+  no el código.
+
+### ¿Cómo la lee Spring Boot?
+
+En `application.properties` escribimos:
+
+```properties
+db.password=${DB_PASSWORD}
+```
+
+La sintaxis `${NOMBRE}` le dice a Spring: *"busca un valor llamado `NOMBRE` y ponlo aquí"*.
+Spring lo busca, entre otros sitios, en las variables de entorno del sistema. Después, la clase
+`ConexionBD` recibe ese valor con `@Value("${db.password}")`.
+
+```
+Variable de entorno DB_PASSWORD  →  application.properties (db.password)  →  ConexionBD (@Value)
+```
+
+También se puede poner un **valor por defecto** por si la variable no existe
+(`${DB_PASSWORD:valor_por_defecto}`), pero aquí no lo hacemos a propósito: así ninguna
+contraseña queda escrita en el repositorio.
+
+### ¿Qué pasa si no la defino?
+
+La aplicación **no arranca** y en la consola aparece un error parecido a:
+
+```
+Could not resolve placeholder 'DB_PASSWORD' in value "${DB_PASSWORD}"
+```
+
+Si ves ese mensaje, define la variable como se explica abajo y vuelve a arrancar.
+
 ## Cómo arrancar
 
-Desde la terminal (Linux/macOS):
+Elige **una** de estas opciones según tu sistema o herramienta.
+
+### Linux / macOS (terminal)
+
+Solo para la terminal actual (se pierde al cerrarla):
 
 ```bash
 export DB_PASSWORD=tu_contraseña
 mvn spring-boot:run
 ```
 
-En Windows (PowerShell):
+O en una sola línea (la variable solo existe para ese comando):
+
+```bash
+DB_PASSWORD=tu_contraseña mvn spring-boot:run
+```
+
+Para que quede guardada siempre, añade la línea `export` al final de `~/.bashrc`
+(o `~/.zshrc` si usas zsh) y abre una terminal nueva:
+
+```bash
+echo 'export DB_PASSWORD=tu_contraseña' >> ~/.bashrc
+```
+
+### Windows (PowerShell)
+
+Solo para la ventana actual:
 
 ```powershell
 $env:DB_PASSWORD="tu_contraseña"
 mvn spring-boot:run
 ```
 
-Desde IntelliJ: *Run → Edit Configurations… → Environment variables* y añadir
-`DB_PASSWORD=tu_contraseña`.
+Para que quede guardada siempre (hay que abrir una ventana nueva después):
 
-La API queda disponible en: **http://localhost:8081/api/clientes**
+```powershell
+setx DB_PASSWORD "tu_contraseña"
+```
+
+### Windows (CMD)
+
+```cmd
+set DB_PASSWORD=tu_contraseña
+mvn spring-boot:run
+```
+
+### IntelliJ IDEA
+
+1. Menú *Run → Edit Configurations…*
+2. Selecciona la configuración `ClientesBackEndApplication`.
+3. En el campo *Environment variables* escribe: `DB_PASSWORD=tu_contraseña`
+4. Pulsa *OK* y ejecuta la aplicación con el botón ▶.
+
+> Si definiste la variable con `.bashrc` o `setx`, reinicia IntelliJ para que la vea.
+
+### Comprobar que la variable está definida
+
+```bash
+echo $DB_PASSWORD          # Linux / macOS
+```
+
+```powershell
+echo $env:DB_PASSWORD      # Windows PowerShell
+```
+
+---
+
+Una vez arrancada, la API queda disponible en: **http://localhost:8081/api/clientes**
 
 ## Estructura del proyecto
 
