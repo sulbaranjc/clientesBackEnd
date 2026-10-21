@@ -14,21 +14,22 @@ La conexión se configura en `src/main/resources/application.properties`:
 ```properties
 server.port=8081
 db.url=jdbc:mysql://localhost:3306/clientes_db_fp01
-db.usuario=root
-db.password=${DB_PASSWORD}
+db.usuario=${DB_USER}
+db.password=${DB_PWD}
 ```
 
-La contraseña de MySQL **no se guarda en el código**: se lee de la variable de entorno `DB_PASSWORD`.
+El usuario y la contraseña de MySQL **no se guardan en el código**: se leen de las variables de entorno
+`DB_USER` y `DB_PWD`.
 
 ## Variables de entorno
 
 ### ¿Qué es una variable de entorno?
 
-Es un valor con nombre (por ejemplo `DB_PASSWORD=1234`) que guarda el **sistema operativo**
+Es un valor con nombre (por ejemplo `DB_PWD=1234`) que guarda el **sistema operativo**
 y que cualquier programa puede leer al arrancar. Sirve para dar configuración a una aplicación
 **sin escribirla dentro del código**.
 
-### ¿Por qué usarlas para la contraseña?
+### ¿Por qué usarlas para el usuario y la contraseña?
 
 - **Seguridad:** este repositorio es público. Si la contraseña estuviera en
   `application.properties`, cualquiera podría verla en GitHub (y seguiría en el historial
@@ -43,30 +44,32 @@ y que cualquier programa puede leer al arrancar. Sirve para dar configuración a
 En `application.properties` escribimos:
 
 ```properties
-db.password=${DB_PASSWORD}
+db.usuario=${DB_USER}
+db.password=${DB_PWD}
 ```
 
 La sintaxis `${NOMBRE}` le dice a Spring: *"busca un valor llamado `NOMBRE` y ponlo aquí"*.
 Spring lo busca, entre otros sitios, en las variables de entorno del sistema. Después, la clase
-`ConexionBD` recibe ese valor con `@Value("${db.password}")`.
+`ConexionBD` recibe esos valores con `@Value("${db.usuario}")` y `@Value("${db.password}")`.
 
 ```
-Variable de entorno DB_PASSWORD  →  application.properties (db.password)  →  ConexionBD (@Value)
+Variable de entorno DB_USER  →  application.properties (db.usuario)   →  ConexionBD (@Value)
+Variable de entorno DB_PWD   →  application.properties (db.password)  →  ConexionBD (@Value)
 ```
 
 También se puede poner un **valor por defecto** por si la variable no existe
-(`${DB_PASSWORD:valor_por_defecto}`), pero aquí no lo hacemos a propósito: así ninguna
+(`${DB_PWD:valor_por_defecto}`), pero aquí no lo hacemos a propósito: así ninguna
 contraseña queda escrita en el repositorio.
 
-### ¿Qué pasa si no la defino?
+### ¿Qué pasa si no las defino?
 
 La aplicación **no arranca** y en la consola aparece un error parecido a:
 
 ```
-Could not resolve placeholder 'DB_PASSWORD' in value "${DB_PASSWORD}"
+Could not resolve placeholder 'DB_PWD' in value "${DB_PWD}"
 ```
 
-Si ves ese mensaje, define la variable como se explica abajo y vuelve a arrancar.
+Si ves ese mensaje, define las variables como se explica abajo y vuelve a arrancar.
 
 ## Cómo arrancar
 
@@ -77,21 +80,23 @@ Elige **una** de estas opciones según tu sistema o herramienta.
 Solo para la terminal actual (se pierde al cerrarla):
 
 ```bash
-export DB_PASSWORD=tu_contraseña
+export DB_USER=tu_usuario
+export DB_PWD=tu_contraseña
 mvn spring-boot:run
 ```
 
-O en una sola línea (la variable solo existe para ese comando):
+O en una sola línea (las variables solo existen para ese comando):
 
 ```bash
-DB_PASSWORD=tu_contraseña mvn spring-boot:run
+DB_USER=tu_usuario DB_PWD=tu_contraseña mvn spring-boot:run
 ```
 
-Para que quede guardada siempre, añade la línea `export` al final de `~/.bashrc`
+Para que quede guardada siempre, añade las líneas `export` al final de `~/.bashrc`
 (o `~/.zshrc` si usas zsh) y abre una terminal nueva:
 
 ```bash
-echo 'export DB_PASSWORD=tu_contraseña' >> ~/.bashrc
+echo 'export DB_USER=tu_usuario' >> ~/.bashrc
+echo 'export DB_PWD=tu_contraseña' >> ~/.bashrc
 ```
 
 ### Windows (PowerShell)
@@ -99,20 +104,23 @@ echo 'export DB_PASSWORD=tu_contraseña' >> ~/.bashrc
 Solo para la ventana actual:
 
 ```powershell
-$env:DB_PASSWORD="tu_contraseña"
+$env:DB_USER="tu_usuario"
+$env:DB_PWD="tu_contraseña"
 mvn spring-boot:run
 ```
 
 Para que quede guardada siempre (hay que abrir una ventana nueva después):
 
 ```powershell
-setx DB_PASSWORD "tu_contraseña"
+setx DB_USER "tu_usuario"
+setx DB_PWD "tu_contraseña"
 ```
 
 ### Windows (CMD)
 
 ```cmd
-set DB_PASSWORD=tu_contraseña
+set DB_USER=tu_usuario
+set DB_PWD=tu_contraseña
 mvn spring-boot:run
 ```
 
@@ -120,19 +128,19 @@ mvn spring-boot:run
 
 1. Menú *Run → Edit Configurations…*
 2. Selecciona la configuración `ClientesBackEndApplication`.
-3. En el campo *Environment variables* escribe: `DB_PASSWORD=tu_contraseña`
+3. En el campo *Environment variables* escribe: `DB_USER=tu_usuario;DB_PWD=tu_contraseña`
 4. Pulsa *OK* y ejecuta la aplicación con el botón ▶.
 
-> Si definiste la variable con `.bashrc` o `setx`, reinicia IntelliJ para que la vea.
+> Si definiste las variables con `.bashrc` o `setx`, reinicia IntelliJ para que la vea.
 
-### Comprobar que la variable está definida
+### Comprobar que las variables están definidas
 
 ```bash
-echo $DB_PASSWORD          # Linux / macOS
+echo $DB_USER $DB_PWD          # Linux / macOS
 ```
 
 ```powershell
-echo $env:DB_PASSWORD      # Windows PowerShell
+echo $env:DB_USER $env:DB_PWD  # Windows PowerShell
 ```
 
 ---
